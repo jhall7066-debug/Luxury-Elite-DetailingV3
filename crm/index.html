@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Leads | LED Detailing</title>
+  <link rel="icon" href="../assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0e; --panel: #15181e; --field: #0d0f13; --line: #262b34;
+      --ink: #eef0f3; --slate: #9ea5b1; --pink: #F196E1; --blue: #5E9CDA;
+      --green: #5fd39a; --red: #f07a7a; --r: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body { background: var(--bg); color: var(--ink); font: 15px/1.5 Inter, system-ui, sans-serif; min-height: 100vh; }
+    h1, h2, h3 { font-family: Sora, Inter, sans-serif; letter-spacing: -0.02em; font-weight: 600; }
+    a { color: inherit; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    .hidden { display: none !important; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+
+    /* Sign-in and setup screens */
+    .center { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+    .center .card { width: 100%; max-width: 400px; padding: 32px 28px; text-align: center; }
+    .center img { width: 76px; margin-bottom: 10px; }
+    .center p { color: var(--slate); font-size: 0.9rem; margin: 6px 0 22px; }
+    .center ol { text-align: left; color: var(--slate); font-size: 0.9rem; padding-left: 20px; display: grid; gap: 6px; }
+    .center code { color: var(--pink); }
+    label.f { display: block; text-align: left; font-size: 0.82rem; font-weight: 600; color: #dfe2e7; margin-bottom: 12px; }
+    input, select, textarea { width: 100%; background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-top: 5px; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--pink); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid transparent; border-radius: 100px; padding: 9px 18px; font-weight: 600; cursor: pointer; background: #fff; color: #0a0b0e; text-decoration: none; white-space: nowrap; }
+    .btn:hover { background: var(--pink); }
+    .btn:disabled { opacity: 0.6; cursor: wait; }
+    .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn.ghost:hover { border-color: var(--ink); }
+    .btn.sm { padding: 6px 13px; font-size: 0.85rem; }
+    .btn.full { width: 100%; margin-top: 6px; }
+    .err { color: var(--red); font-size: 0.86rem; min-height: 1.3em; margin-top: 12px; }
+
+    /* Top bar */
+    header { position: sticky; top: 0; z-index: 5; background: rgba(10, 11, 14, 0.9); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+    header .wrap { display: flex; align-items: center; gap: 12px; height: 62px; }
+    header img { width: 38px; }
+    header h1 { font-size: 1.05rem; flex: 1; line-height: 1.2; }
+    header h1 span { display: block; font: 500 0.72rem Inter, sans-serif; color: var(--pink); letter-spacing: 0.04em; }
+    .who { color: var(--slate); font-size: 0.82rem; }
+
+    /* Filters */
+    .tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 20px 0 16px; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+    .tab { border: 1px solid var(--line); background: transparent; border-radius: 100px; padding: 6px 12px; font-size: 0.85rem; cursor: pointer; color: var(--slate); }
+    .tab b { color: var(--ink); margin-left: 4px; }
+    .tab.on { background: #fff; color: #0a0b0e; border-color: #fff; }
+    .tab.on b { color: #0a0b0e; }
+    .search { max-width: 240px; margin: 0; }
+
+    /* Lead cards */
+    .list { display: grid; gap: 12px; padding-bottom: 60px; }
+    .lead { padding: 16px 18px; display: grid; grid-template-columns: 1fr 280px; gap: 18px; }
+    .lead.is-new { border-left: 3px solid var(--pink); }
+    .lead-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 10px; }
+    .lead-head h3 { font-size: 1.05rem; }
+    .ago { color: var(--slate); font-size: 0.8rem; }
+    .pill { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 9px; border-radius: 100px; border: 1px solid currentColor; }
+    .s-new { color: var(--pink); } .s-contacted { color: var(--blue); } .s-booked { color: var(--green); }
+    .s-completed { color: var(--slate); } .s-lost { color: var(--red); }
+    dl { display: grid; grid-template-columns: max-content 1fr; gap: 3px 14px; font-size: 0.9rem; }
+    dt { color: var(--slate); }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    .contact { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .side { display: flex; flex-direction: column; gap: 8px; }
+    .side label { font-size: 0.78rem; font-weight: 600; color: var(--slate); }
+    .side select, .side textarea { margin-top: 4px; }
+    .side textarea { min-height: 90px; resize: vertical; font-size: 0.88rem; }
+    .side-foot { display: flex; justify-content: space-between; align-items: center; }
+    .saved { font-size: 0.78rem; color: var(--green); }
+    .del { background: none; border: 0; color: var(--slate); font-size: 0.8rem; cursor: pointer; padding: 0; }
+    .del:hover { color: var(--red); }
+    .empty { text-align: center; color: var(--slate); padding: 60px 20px; }
+    .banner { margin-top: 16px; padding: 12px 16px; border-color: var(--red); color: var(--red); font-size: 0.9rem; }
+
+    /* Add-lead dialog */
+    dialog { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: var(--r); padding: 24px; width: min(480px, calc(100% - 32px)); }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.65); }
+    dialog h2 { font-size: 1.15rem; margin-bottom: 16px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+    .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+
+    @media (max-width: 720px) {
+      .lead { grid-template-columns: 1fr; }
+      .search { max-width: none; flex: 1 1 100%; }
+      .who { display: none; }
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Shown until assets/firebase-config.js is filled in -->
+  <section id="setup" class="center hidden">
+    <div class="card">
+      <img src="../assets/logo.png" alt="LED Detailing logo" />
+      <h2>CRM not connected yet</h2>
+      <p>Firebase still needs to be set up.</p>
+      <ol>
+        <li>Paste your Firebase config into <code>assets/firebase-config.js</code>.</li>
+        <li>Publish <code>firestore.rules</code> in the Firebase console.</li>
+        <li>Create your login under Authentication → Users.</li>
+      </ol>
+      <p style="margin:18px 0 0">The full steps are in <code>CRM-SETUP.md</code>.</p>
+    </div>
+  </section>
+
+  <!-- Sign in -->
+  <section id="login" class="center hidden">
+    <form class="card" id="login-form">
+      <img src="../assets/logo.png" alt="LED Detailing logo" />
+      <h2>Leads</h2>
+      <p>Sign in to see booking requests.</p>
+      <label class="f">Email<input id="email" type="email" autocomplete="username" required /></label>
+      <label class="f">Password<input id="password" type="password" autocomplete="current-password" required /></label>
+      <button class="btn full" type="submit">Sign in</button>
+      <div class="err" id="login-err"></div>
+    </form>
+  </section>
+
+  <!-- CRM -->
+  <div id="app" class="hidden">
+    <header>
+      <div class="wrap">
+        <img src="../assets/logo.png" alt="" />
+        <h1>Leads<span>LED DETAILING</span></h1>
+        <span class="who" id="who"></span>
+        <button class="btn sm" id="add-btn" type="button">+ Add lead</button>
+        <button class="btn ghost sm" id="logout" type="button">Sign out</button>
+      </div>
+    </header>
+    <main class="wrap">
+      <div id="banner" class="card banner hidden"></div>
+      <div class="tools">
+        <div class="tabs" id="tabs"></div>
+        <input class="search" id="search" type="search" placeholder="Search name, phone, car…" />
+      </div>
+      <div class="list" id="list"><div class="empty">Loading…</div></div>
+    </main>
+  </div>
+
+  <!-- Add a lead by hand (phone calls, Instagram DMs, walk-ups) -->
+  <dialog id="add-dialog">
+    <form id="add-form" method="dialog">
+      <h2>Add a lead</h2>
+      <div class="row">
+        <label class="f">Name<input name="name" required maxlength="100" /></label>
+        <label class="f">Phone<input name="phone" type="tel" required maxlength="30" /></label>
+      </div>
+      <label class="f">Year / make / model<input name="vehicle" maxlength="100" /></label>
+      <div class="row">
+        <label class="f">Package
+          <select name="service">
+            <option value="">Not sure yet</option>
+            <option>Basic Interior ($65)</option><option>Platinum Interior ($100)</option>
+            <option>Basic Exterior ($65)</option><option>Platinum Exterior ($100)</option>
+            <option>Full Detail: sedan/SUV ($140)</option><option>Full Detail: truck ($200)</option>
+          </select>
+        </label>
+        <label class="f">Preferred date<input name="date" type="date" /></label>
+      </div>
+      <label class="f">Address or "drop off"<input name="location" maxlength="200" /></label>
+      <label class="f">Notes<textarea name="notes" rows="3" maxlength="2000"></textarea></label>
+      <div class="actions">
+        <button class="btn ghost sm" type="button" id="add-cancel">Cancel</button>
+        <button class="btn sm" type="submit">Save lead</button>
+      </div>
+      <div class="err" id="add-err"></div>
+    </form>
+  </dialog>
+
+  <script src="../assets/firebase-config.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const $ = (s) => document.querySelector(s);
+    const cfg = window.LED_FIREBASE;
+    const STATUSES = [
+      ["new", "New"], ["contacted", "Contacted"], ["booked", "Booked"],
+      ["completed", "Completed"], ["lost", "Lost"]
+    ];
+
+    if (!cfg || !cfg.apiKey || cfg.apiKey.startsWith("PASTE")) {
+      $("#setup").classList.remove("hidden");
+    } else {
+      start();
+    }
+
+    function start() {
+      const app = initializeApp(cfg);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const leadsRef = collection(db, "leads");
+
+      let leads = [];
+      let filter = "new";
+      let term = "";
+      let stopListening = null;
+      let renderPending = false;
+
+      /* ---------- Sign in / out ---------- */
+      $("#login-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector("button");
+        btn.disabled = true;
+        $("#login-err").textContent = "";
+        try {
+          await signInWithEmailAndPassword(auth, $("#email").value.trim(), $("#password").value);
+        } catch (err) {
+          const c = err.code || "";
+          $("#login-err").textContent =
+            c.includes("invalid") || c.includes("wrong-password") || c.includes("user-not-found") ? "Wrong email or password." :
+            c.includes("too-many-requests") ? "Too many tries. Wait a minute and try again." :
+            "Couldn't sign in (" + (c || err.message) + ").";
+        }
+        btn.disabled = false;
+      });
+      $("#logout").addEventListener("click", () => signOut(auth));
+
+      onAuthStateChanged(auth, (user) => {
+        if (stopListening) { stopListening(); stopListening = null; }
+        $("#login").classList.toggle("hidden", !!user);
+        $("#app").classList.toggle("hidden", !user);
+        if (!user) return;
+        $("#who").textContent = user.email;
+        stopListening = onSnapshot(query(leadsRef, orderBy("createdAt", "desc")), (snap) => {
+          $("#banner").classList.add("hidden");
+          leads = snap.docs.map((d) => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
+          render();
+        }, (err) => {
+          const banner = $("#banner");
+          banner.classList.remove("hidden");
+          banner.textContent = err.code === "permission-denied"
+            ? "This login isn't allowed to see leads. Add " + user.email + " to the owner list in firestore.rules and publish the rules again."
+            : "Couldn't load leads: " + err.message;
+          $("#list").innerHTML = "";
+        });
+      });
+
+      /* ---------- Display ---------- */
+      const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const digits = (s) => String(s || "").replace(/[^\d+]/g, "");
+
+      function ago(ts) {
+        if (!ts || !ts.toDate) return "";
+        const d = ts.toDate();
+        const mins = Math.round((Date.now() - d) / 60000);
+        if (mins < 1) return "just now";
+        if (mins < 60) return mins + " min ago";
+        const hrs = Math.round(mins / 60);
+        if (hrs < 24) return hrs + " hr ago";
+        const days = Math.round(hrs / 24);
+        if (days < 7) return days + (days === 1 ? " day ago" : " days ago");
+        return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: d.getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+      }
+      function niceDate(s) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+        if (!m) return s || "";
+        return new Date(+m[1], m[2] - 1, +m[3]).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+      }
+
+      function render() {
+        // Don't wipe a note someone is in the middle of typing; redraw when they leave the box.
+        if (document.activeElement && document.activeElement.matches(".notes")) { renderPending = true; return; }
+        renderPending = false;
+
+        const counts = { all: leads.length };
+        STATUSES.forEach(([k]) => (counts[k] = 0));
+        leads.forEach((l) => { counts[l.status] = (counts[l.status] || 0) + 1; });
+        document.title = (counts.new ? "(" + counts.new + ") " : "") + "Leads | LED Detailing";
+
+        $("#tabs").innerHTML = [["all", "All"], ...STATUSES].map(([k, label]) =>
+          `<button class="tab${filter === k ? " on" : ""}" data-filter="${k}" type="button">${label}<b>${counts[k] || 0}</b></button>`
+        ).join("");
+
+        const t = term.toLowerCase();
+        const shown = leads.filter((l) =>
+          (filter === "all" || l.status === filter) &&
+          (!t || [l.name, l.phone, l.vehicle, l.service, l.location, l.message, l.notes].join(" ").toLowerCase().includes(t))
+        );
+
+        if (!shown.length) {
+          $("#list").innerHTML = `<div class="empty">${leads.length ? "No leads match." : "No leads yet. New booking requests from the website will show up here automatically."}</div>`;
+          return;
+        }
+
+        $("#list").innerHTML = shown.map((l) => {
+          const rows = [
+            ["Vehicle", l.vehicle], ["Size", l.size], ["Package", l.service || "Not sure"],
+            ["Preferred", niceDate(l.date)], ["Where", l.location], ["Message", l.message]
+          ].filter(([, v]) => v);
+          const tel = digits(l.phone);
+          return `
+          <article class="card lead${l.status === "new" ? " is-new" : ""}" data-id="${l.id}">
+            <div>
+              <div class="lead-head">
+                <h3>${esc(l.name)}</h3>
+                <span class="pill s-${esc(l.status)}">${esc((STATUSES.find(([k]) => k === l.status) || [, l.status])[1])}</span>
+                <span class="ago">${ago(l.createdAt)}${l.source === "manual" ? " · added by hand" : ""}</span>
+              </div>
+              <dl>${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+              <div class="contact">
+                ${tel ? `<a class="btn sm" href="tel:${tel}">Call ${esc(l.phone)}</a><a class="btn ghost sm" href="sms:${tel}">Text</a>` : ""}
+              </div>
+            </div>
+            <div class="side">
+              <label>Status
+                <select class="status">${STATUSES.map(([k, label]) => `<option value="${k}"${l.status === k ? " selected" : ""}>${label}</option>`).join("")}</select>
+              </label>
+              <label>Notes
+                <textarea class="notes" placeholder="Quote, time booked, follow-up…">${esc(l.notes)}</textarea>
+              </label>
+              <div class="side-foot"><span class="saved"></span><button class="del" type="button">Delete</button></div>
+            </div>
+          </article>`;
+        }).join("");
+      }
+
+      /* ---------- Actions ---------- */
+      $("#tabs").addEventListener("click", (e) => {
+        const b = e.target.closest(".tab");
+        if (b) { filter = b.dataset.filter; render(); }
+      });
+      $("#search").addEventListener("input", (e) => { term = e.target.value.trim(); render(); });
+
+      const leadOf = (el) => el.closest(".lead");
+      function flash(card, msg, bad) {
+        const s = card.querySelector(".saved");
+        s.style.color = bad ? "var(--red)" : "";
+        s.textContent = msg;
+        if (!bad) setTimeout(() => { if (s.textContent === msg) s.textContent = ""; }, 1800);
+      }
+
+      $("#list").addEventListener("change", async (e) => {
+        if (!e.target.matches(".status")) return;
+        const card = leadOf(e.target);
+        try { await updateDoc(doc(db, "leads", card.dataset.id), { status: e.target.value, updatedAt: serverTimestamp() }); }
+        catch (err) { flash(card, "Didn't save. Try again.", true); }
+      });
+
+      $("#list").addEventListener("focusout", async (e) => {
+        if (!e.target.matches(".notes")) return;
+        const card = leadOf(e.target);
+        const lead = leads.find((l) => l.id === card.dataset.id);
+        const value = e.target.value;
+        if (lead && value !== (lead.notes || "")) {
+          try {
+            await updateDoc(doc(db, "leads", card.dataset.id), { notes: value, updatedAt: serverTimestamp() });
+            flash(card, "Saved");
+          } catch (err) { flash(card, "Didn't save. Try again.", true); }
+        }
+        if (renderPending) setTimeout(render, 0);
+      });
+
+      $("#list").addEventListener("click", async (e) => {
+        if (!e.target.matches(".del")) return;
+        const card = leadOf(e.target);
+        const lead = leads.find((l) => l.id === card.dataset.id);
+        if (!confirm("Delete the lead for " + (lead ? lead.name : "this customer") + "? This can't be undone.")) return;
+        try { await deleteDoc(doc(db, "leads", card.dataset.id)); }
+        catch (err) { flash(card, "Couldn't delete.", true); }
+      });
+
+      /* ---------- Add lead by hand ---------- */
+      const dlg = $("#add-dialog");
+      const addForm = $("#add-form");
+      $("#add-btn").addEventListener("click", () => { addForm.reset(); $("#add-err").textContent = ""; dlg.showModal(); });
+      $("#add-cancel").addEventListener("click", () => dlg.close());
+      addForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const f = new FormData(addForm);
+        const get = (k) => String(f.get(k) || "").trim();
+        const btn = addForm.querySelector("button[type=submit]");
+        btn.disabled = true;
+        try {
+          await addDoc(leadsRef, {
+            name: get("name"), phone: get("phone"), vehicle: get("vehicle"), service: get("service"),
+            date: get("date"), location: get("location"), notes: get("notes"), message: "",
+            size: "", status: "new", source: "manual", createdAt: serverTimestamp()
+          });
+          dlg.close();
+          filter = "new";
+          render();
+        } catch (err) {
+          $("#add-err").textContent = "Couldn't save: " + (err.code || err.message);
+        }
+        btn.disabled = false;
+      });
+
+      // Keep "5 min ago" labels fresh.
+      setInterval(() => { if (leads.length) render(); }, 60000);
+    }
+  </script>
+</body>
+</html>
