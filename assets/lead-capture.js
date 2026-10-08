@@ -29,6 +29,7 @@
         return fs.addDoc(fs.collection(db, "leads"), {
           name: val("name", 100),
           phone: val("phone", 30),
+          email: val("email", 120),
           vehicle: val("vehicle", 100),
           size: val("size", 60),
           service: val("service", 80),

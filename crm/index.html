@@ -159,6 +159,7 @@
         <label class="f">Name<input name="name" required maxlength="100" /></label>
         <label class="f">Phone<input name="phone" type="tel" required maxlength="30" /></label>
       </div>
+      <label class="f">Email<input name="email" type="email" maxlength="120" /></label>
       <label class="f">Year / make / model<input name="vehicle" maxlength="100" /></label>
       <div class="row">
         <label class="f">Package
@@ -290,7 +291,7 @@
         const t = term.toLowerCase();
         const shown = leads.filter((l) =>
           (filter === "all" || l.status === filter) &&
-          (!t || [l.name, l.phone, l.vehicle, l.service, l.location, l.message, l.notes].join(" ").toLowerCase().includes(t))
+          (!t || [l.name, l.phone, l.email, l.vehicle, l.service, l.location, l.message, l.notes].join(" ").toLowerCase().includes(t))
         );
 
         if (!shown.length) {
@@ -300,7 +301,7 @@
 
         $("#list").innerHTML = shown.map((l) => {
           const rows = [
-            ["Vehicle", l.vehicle], ["Size", l.size], ["Package", l.service || "Not sure"],
+            ["Email", l.email], ["Vehicle", l.vehicle], ["Size", l.size], ["Package", l.service || "Not sure"],
             ["Preferred", niceDate(l.date)], ["Where", l.location], ["Message", l.message]
           ].filter(([, v]) => v);
           const tel = digits(l.phone);
@@ -315,6 +316,7 @@
               <dl>${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
               <div class="contact">
                 ${tel ? `<a class="btn sm" href="tel:${tel}">Call ${esc(l.phone)}</a><a class="btn ghost sm" href="sms:${tel}">Text</a>` : ""}
+                ${l.email ? `<a class="btn ghost sm" href="mailto:${esc(l.email)}">Email</a>` : ""}
               </div>
             </div>
             <div class="side">
@@ -388,7 +390,7 @@
         btn.disabled = true;
         try {
           await addDoc(leadsRef, {
-            name: get("name"), phone: get("phone"), vehicle: get("vehicle"), service: get("service"),
+            name: get("name"), phone: get("phone"), email: get("email"), vehicle: get("vehicle"), service: get("service"),
             date: get("date"), location: get("location"), notes: get("notes"), message: "",
             size: "", status: "new", source: "manual", createdAt: serverTimestamp()
           });
