@@ -543,3 +543,7 @@ b, strong { color: var(--ink); font-weight: 600; }
 /* Phones: header keeps logo, cart and menu; booking lives in the bottom bar */
 .site-header .btn-sm { display: none; }
 @media (min-width: 600px) { .site-header .btn-sm { display: inline-flex; } }
+
+/* Call buttons: blue outline so "call" reads differently from "book" (pink) */
+.action-bar .ab-call, a.btn-ghost[href^="tel:"] { border-color: var(--blue); color: var(--blue); }
+a.btn-ghost[href^="tel:"]:hover { border-color: #9cc4f0; color: #9cc4f0; }
