@@ -3,7 +3,7 @@
 ## What's in v3
 
 - **index.html**: the booking form now sends each request to two places: the CRM (Firebase) and Netlify Forms as a backup. The customer then lands on **thank-you.html**.
-- **crm/**: the CRM itself, at `https://YOUR-SITE.netlify.app/crm/`. It needs a sign-in. It lists leads, filters them by status, saves notes, has call/text buttons, and lets you add a lead by hand.
+- **crm/**: the CRM itself, at `https://YOUR-SITE.netlify.app/crm/`. It needs a sign-in. It has four tabs: Leads, Calendar, Clients and Revenue (see below).
 - **assets/firebase-config.js**: where your Firebase keys go (step 2).
 - **firestore.rules**: the security rules (step 3).
 
@@ -39,6 +39,17 @@ Open `assets/firebase-config.js` and replace each `PASTE_...` value with the mat
 - **Notes** save when you click out of the box.
 - **+ Add lead** is for calls, Instagram DMs, and walk-ups.
 - You can bookmark `/crm/` on your phone or add it to the home screen. The page updates live, so new requests show up without refreshing.
+
+## Calendar, Clients and Revenue (added in v3.1)
+The CRM has four tabs at the top: **Leads, Calendar, Clients, Revenue**. They all use the same leads, so there's nothing new to set up in Firebase and you don't need to republish the rules.
+
+- **Booking a job:** set a lead to **Booked**. Appointment date, time, price and tip boxes appear on the card. If the customer picked a date on the form, it's filled in for you.
+- **Finishing a job:** set it to **Completed**. If you didn't type a price, the package price is used (marked "est." on the Revenue tab), so type what you actually charged when it's different. Tips go in the Tip box.
+- **Calendar:** month view of booked jobs (green), finished jobs (gray) and dates customers asked for but aren't booked yet (dashed pink). Tap a day to see its jobs, with buttons for Call, Text, Directions and Add to Google Calendar. **+ Book this day** adds a job straight onto that date.
+- **Clients:** everyone who has booked, grouped by phone number, so repeat customers show up once with their full history and total spent. **+ New job** re-books them with their info already filled in. **Download client list (CSV)** gives you a spreadsheet of the list.
+- **Revenue:** totals for this month, last month, this year, last year or all time, a month-by-month chart, revenue by package, what's booked ahead, and every completed job. **Download CSV** exports the jobs for bookkeeping or taxes.
+- **Edit** on any card (or tapping a job anywhere) opens the full details, including name, phone and package.
+- **Adding past jobs:** use **+ Add lead**, set the status to Completed, and fill in the date and price. That gets old customers into Clients and Revenue.
 
 ## If something's off
 - **"This login isn't allowed to see leads"**: the email you signed in with isn't in `firestore.rules`. Add it and publish.

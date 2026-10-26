@@ -3,4 +3,4 @@ Allow: /
 Disallow: /crm/
 Disallow: /thank-you
 
-Sitemap: https://luxuryelitedetailing.netlify.app/sitemap.xml
+Sitemap: https://luxuryelitedetailing.com/sitemap.xml

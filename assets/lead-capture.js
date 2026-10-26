@@ -35,7 +35,8 @@
           service: val("service", 80),
           date: val("date", 20),
           location: val("location", 200),
-          message: val("message", 2000),
+          // Add-ons ride in the message so the existing Firestore rules accept the lead unchanged.
+          message: ((val("addons", 400) ? "Add-ons: " + val("addons", 400) + "\n" : "") + val("message", 2000)).slice(0, 2000),
           status: "new",
           notes: "",
           source: "website",
@@ -80,7 +81,7 @@
     Promise.allSettled(jobs).then(function (results) {
       results.forEach(function (r) { if (r.status === "rejected") console.warn("[LED booking form]", r.reason); });
       if (results.some(function (r) { return r.status === "fulfilled"; })) {
-        try { sessionStorage.removeItem("led-pkg"); } catch (err) {}
+        try { sessionStorage.removeItem("led-pkg"); localStorage.removeItem("led-cart"); } catch (err) {}
         location.href = "thank-you.html";
       } else {
         btn.disabled = false;
