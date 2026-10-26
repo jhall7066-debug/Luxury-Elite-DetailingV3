@@ -547,3 +547,6 @@ b, strong { color: var(--ink); font-weight: 600; }
 /* Call buttons: blue outline so "call" reads differently from "book" (pink) */
 .action-bar .ab-call, a.btn-ghost[href^="tel:"] { border-color: var(--blue); color: var(--blue); }
 a.btn-ghost[href^="tel:"]:hover { border-color: #9cc4f0; color: #9cc4f0; }
+/* Hero: Call Now is a primary action too, so it gets a solid blue fill over the photo */
+.hero-actions a.btn-ghost[href^="tel:"] { background: var(--blue); border-color: var(--blue); color: #0a0a0f; }
+.hero-actions a.btn-ghost[href^="tel:"]:hover { background: #9cc4f0; border-color: #9cc4f0; color: #0a0a0f; }
